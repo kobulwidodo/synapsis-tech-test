@@ -2,11 +2,15 @@
 run:
 	@go run ./src/cmd/main.go
 
+.PHONY: run-tests
+run-tests:
+	@go clean -cache
+	@go test -v -failfast `go list ./... | grep -i 'business'` -cover
+
 .PHONY: swaggo
 swaggo:
 	@/bin/rm -rf ./docs/swagger
 	@`go env GOPATH`/bin/swag init -g ./src/cmd/main.go -o ./docs/swagger --parseInternal
-
 
 .PHONY: swag-install
 swag-install:
@@ -16,3 +20,12 @@ swag-install:
 run-app:
 	@make swaggo
 	@make run
+
+.PHONY: mock
+mock:
+	@`go env GOPATH`/bin/mockgen -source src/business/domain/$(domain)/$(domain).go -destination src/business/domain/mock/$(domain)/$(domain).go
+
+.PHONY: mock-all
+mock-all:
+	@make mock domain=product
+	@make mock domain=category
