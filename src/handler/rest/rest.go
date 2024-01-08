@@ -145,6 +145,13 @@ func (r *rest) Register() {
 	auth := v1.Group("/auth")
 	auth.POST("/register", r.RegisterUser)
 	auth.POST("/login", r.LoginUser)
+
+	category := v1.Group("/category")
+	category.GET("", r.VerifyUser, r.GetListCategory)
+
+	product := v1.Group("/product")
+	product.GET("", r.VerifyUser, r.GetListProduct)
+	product.GET("/:product_id", r.VerifyUser, r.GetProduct)
 }
 
 func (r *rest) registerSwaggerRoutes() {
