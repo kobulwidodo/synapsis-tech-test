@@ -64,6 +64,21 @@ func (mr *MockInterfaceMockRecorder) Get(param interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockInterface)(nil).Get), param)
 }
 
+// GetList mocks base method.
+func (m *MockInterface) GetList(param entity.CartParam) ([]entity.Cart, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetList", param)
+	ret0, _ := ret[0].([]entity.Cart)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetList indicates an expected call of GetList.
+func (mr *MockInterfaceMockRecorder) GetList(param interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetList", reflect.TypeOf((*MockInterface)(nil).GetList), param)
+}
+
 // Update mocks base method.
 func (m *MockInterface) Update(selectParam entity.CartParam, updateParam entity.UpdateCartParam) error {
 	m.ctrl.T.Helper()

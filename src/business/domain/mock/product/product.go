@@ -63,3 +63,18 @@ func (mr *MockInterfaceMockRecorder) GetList(param interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetList", reflect.TypeOf((*MockInterface)(nil).GetList), param)
 }
+
+// GetListByID mocks base method.
+func (m *MockInterface) GetListByID(productIDs []uint) ([]entity.Product, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetListByID", productIDs)
+	ret0, _ := ret[0].([]entity.Product)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetListByID indicates an expected call of GetListByID.
+func (mr *MockInterfaceMockRecorder) GetListByID(productIDs interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetListByID", reflect.TypeOf((*MockInterface)(nil).GetListByID), productIDs)
+}

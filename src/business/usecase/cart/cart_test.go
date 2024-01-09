@@ -200,3 +200,149 @@ func Test_cart_Create(t *testing.T) {
 		})
 	}
 }
+
+func Test_cart_GetList(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	authMock := mock_auth.NewMockInterface(ctrl)
+	cartMock := mock_cart.NewMockInterface(ctrl)
+	productMock := mock_product.NewMockInterface(ctrl)
+
+	userAuthMock := auth.UserAuthInfo{
+		User: auth.User{
+			ID: 1,
+		},
+	}
+
+	cartParamMock := entity.CartParam{
+		UserID: 1,
+		Status: entity.StatusInCart,
+	}
+
+	cartResultMock := []entity.Cart{
+		{
+			Model: gorm.Model{
+				ID: 1,
+			},
+			ProductID: 1,
+			Qty:       1,
+		},
+	}
+
+	productIDsMock := []uint{1}
+
+	productResultMock := []entity.Product{
+		{
+			Model: gorm.Model{
+				ID: 1,
+			},
+			Name:  "product 1",
+			Price: 10000,
+		},
+	}
+
+	resultMock := []entity.Cart{
+		{
+			Model: gorm.Model{
+				ID: 1,
+			},
+			ProductID:     1,
+			Qty:           1,
+			TotalPriceNow: 10000,
+			Product: entity.Product{
+				Model: gorm.Model{
+					ID: 1,
+				},
+				Name:  "product 1",
+				Price: 10000,
+			},
+		},
+	}
+
+	type mockFields struct {
+		auth    *mock_auth.MockInterface
+		product *mock_product.MockInterface
+		cart    *mock_cart.MockInterface
+	}
+
+	mocks := mockFields{
+		auth:    authMock,
+		product: productMock,
+		cart:    cartMock,
+	}
+
+	c := cart.Init(cartMock, authMock, productMock)
+
+	type args struct {
+		ctx context.Context
+	}
+	tests := []struct {
+		name     string
+		args     args
+		mockFunc func(mock mockFields, arg args)
+		want     []entity.Cart
+		wantErr  bool
+	}{
+		{
+			name: "failed to get user auth",
+			args: args{
+				ctx: context.Background(),
+			},
+			mockFunc: func(mock mockFields, arg args) {
+				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(auth.UserAuthInfo{}, assert.AnError)
+			},
+			want:    []entity.Cart{},
+			wantErr: true,
+		},
+		{
+			name: "failed to get cart list",
+			args: args{
+				ctx: context.Background(),
+			},
+			mockFunc: func(mock mockFields, arg args) {
+				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
+				mock.cart.EXPECT().GetList(cartParamMock).Return([]entity.Cart{}, assert.AnError)
+			},
+			want:    []entity.Cart{},
+			wantErr: true,
+		},
+		{
+			name: "failed to get product list by ids",
+			args: args{
+				ctx: context.Background(),
+			},
+			mockFunc: func(mock mockFields, arg args) {
+				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
+				mock.cart.EXPECT().GetList(cartParamMock).Return(cartResultMock, nil)
+				mock.product.EXPECT().GetListByID(productIDsMock).Return([]entity.Product{}, assert.AnError)
+			},
+			want:    cartResultMock,
+			wantErr: true,
+		},
+		{
+			name: "all ok",
+			args: args{
+				ctx: context.Background(),
+			},
+			mockFunc: func(mock mockFields, arg args) {
+				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
+				mock.cart.EXPECT().GetList(cartParamMock).Return(cartResultMock, nil)
+				mock.product.EXPECT().GetListByID(productIDsMock).Return(productResultMock, nil)
+			},
+			want:    resultMock,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.mockFunc(mocks, tt.args)
+			got, err := c.GetList(tt.args.ctx)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("cart.GetList() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}

@@ -10,6 +10,7 @@ import (
 
 type Interface interface {
 	Create(ctx context.Context, cartInput entity.CreateCartParam) (entity.Cart, error)
+	GetList(ctx context.Context) ([]entity.Cart, error)
 }
 
 type cart struct {
@@ -71,6 +72,50 @@ func (c *cart) Create(ctx context.Context, cartInput entity.CreateCartParam) (en
 	})
 	if err != nil {
 		return result, err
+	}
+
+	return result, nil
+}
+
+func (c *cart) GetList(ctx context.Context) ([]entity.Cart, error) {
+	result := []entity.Cart{}
+
+	user, err := c.auth.GetUserAuthInfo(ctx)
+	if err != nil {
+		return result, err
+	}
+
+	result, err = c.cart.GetList(entity.CartParam{
+		UserID: user.User.ID,
+		Status: entity.StatusInCart,
+	})
+	if err != nil {
+		return result, err
+	}
+
+	mapProductIDs := make(map[uint]bool)
+	for _, c := range result {
+		mapProductIDs[c.ProductID] = true
+	}
+
+	productIDs := []uint{}
+	for id := range mapProductIDs {
+		productIDs = append(productIDs, id)
+	}
+
+	products, err := c.product.GetListByID(productIDs)
+	if err != nil {
+		return result, err
+	}
+
+	productsMap := make(map[uint]entity.Product)
+	for _, p := range products {
+		productsMap[p.ID] = p
+	}
+
+	for i, c := range result {
+		result[i].TotalPriceNow = int64(c.Qty * productsMap[c.ProductID].Price)
+		result[i].Product = productsMap[c.ProductID]
 	}
 
 	return result, nil
