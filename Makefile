@@ -33,5 +33,6 @@ mock-lib:
 mock-all:
 	@make mock-lib domain=auth
 	@make mock domain=product
+	@make mock domain=user
 	@make mock domain=category
 	@make mock domain=cart
