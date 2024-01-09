@@ -330,3 +330,77 @@ func Test_cart_Update(t *testing.T) {
 		})
 	}
 }
+
+func Test_cart_Delete(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	querySql := "UPDATE"
+	query := regexp.QuoteMeta(querySql)
+
+	mockParam := entity.CartParam{
+		ID: 1,
+	}
+
+	type args struct {
+		param entity.CartParam
+	}
+	tests := []struct {
+		name        string
+		args        args
+		prepSqlMock func() (*sql.DB, error)
+		wantErr     bool
+	}{
+		{
+			name: "failed to exec query",
+			args: args{
+				param: mockParam,
+			},
+			prepSqlMock: func() (*sql.DB, error) {
+				sqlServer, sqlMock, err := sqlmock.New()
+				sqlMock.ExpectQuery(query).WillReturnError(assert.AnError)
+				return sqlServer, err
+			},
+			wantErr: true,
+		},
+		{
+			name: "all ok",
+			args: args{
+				param: mockParam,
+			},
+			prepSqlMock: func() (*sql.DB, error) {
+				sqlServer, sqlMock, err := sqlmock.New()
+				sqlMock.ExpectBegin()
+				sqlMock.ExpectExec(query).WillReturnResult(driver.RowsAffected(1))
+				sqlMock.ExpectCommit()
+				sqlMock.ExpectationsWereMet()
+				return sqlServer, err
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			sqlServer, err := tt.prepSqlMock()
+			if err != nil {
+				t.Error(err)
+			}
+			defer sqlServer.Close()
+
+			sqlClient, err := gorm.Open(mysql.New(mysql.Config{
+				Conn:                      sqlServer,
+				SkipInitializeWithVersion: true,
+			}))
+			if err != nil {
+				t.Error(err)
+			}
+
+			c := Init(sqlClient)
+			err = c.Delete(tt.args.param)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("cart.Delete() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+		})
+	}
+}

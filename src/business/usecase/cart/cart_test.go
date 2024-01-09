@@ -346,3 +346,95 @@ func Test_cart_GetList(t *testing.T) {
 		})
 	}
 }
+
+func Test_cart_Delete(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	cartMock := mock_cart.NewMockInterface(ctrl)
+	authMock := mock_auth.NewMockInterface(ctrl)
+
+	paramMock := entity.CartParam{
+		ID: 1,
+	}
+
+	userAuthMock := auth.UserAuthInfo{
+		User: auth.User{
+			ID: 1,
+		},
+	}
+
+	cartDeleteParamMock := entity.CartParam{
+		ID:     1,
+		UserID: 1,
+		Status: entity.StatusInCart,
+	}
+
+	type mockFields struct {
+		auth *mock_auth.MockInterface
+		cart *mock_cart.MockInterface
+	}
+
+	mocks := mockFields{
+		auth: authMock,
+		cart: cartMock,
+	}
+
+	c := cart.Init(cartMock, authMock, nil)
+
+	type args struct {
+		ctx   context.Context
+		param entity.CartParam
+	}
+	tests := []struct {
+		name     string
+		args     args
+		mockFunc func(mock mockFields, arg args)
+		wantErr  bool
+	}{
+		{
+			name: "failed to get user auth info",
+			args: args{
+				ctx: context.Background(),
+			},
+			mockFunc: func(mock mockFields, arg args) {
+				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(auth.UserAuthInfo{}, assert.AnError)
+			},
+			wantErr: true,
+		},
+		{
+			name: "failed to delete cart",
+			args: args{
+				ctx:   context.Background(),
+				param: paramMock,
+			},
+			mockFunc: func(mock mockFields, arg args) {
+				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
+				mock.cart.EXPECT().Delete(cartDeleteParamMock).Return(assert.AnError)
+			},
+			wantErr: true,
+		},
+		{
+			name: "all ok",
+			args: args{
+				ctx:   context.Background(),
+				param: paramMock,
+			},
+			mockFunc: func(mock mockFields, arg args) {
+				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
+				mock.cart.EXPECT().Delete(cartDeleteParamMock).Return(nil)
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.mockFunc(mocks, tt.args)
+			err := c.Delete(tt.args.ctx, tt.args.param)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("cart.Delete() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+		})
+	}
+}
