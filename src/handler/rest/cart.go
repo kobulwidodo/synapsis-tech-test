@@ -55,3 +55,30 @@ func (r *rest) GetListCart(ctx *gin.Context) {
 
 	r.httpRespSuccess(ctx, http.StatusOK, "successfullt get all product from cart", carts)
 }
+
+// @Summary Delete a Product
+// @Description Delete a Product from Cart
+// @Security BearerAuth
+// @Tags Cart
+// @Produce json
+// @Param cart_id path int true "cart id"
+// @Success 200 {object} entity.Response{}
+// @Failure 400 {object} entity.Response{}
+// @Failure 401 {object} entity.Response{}
+// @Failure 404 {object} entity.Response{}
+// @Failure 500 {object} entity.Response{}
+// @Router /api/v1/cart/{cart_id} [DELETE]
+func (r *rest) DeleteCart(ctx *gin.Context) {
+	var param entity.CartParam
+	if err := ctx.ShouldBindUri(&param); err != nil {
+		r.httpRespError(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	if err := r.uc.Cart.Delete(ctx.Request.Context(), param); err != nil {
+		r.httpRespError(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	r.httpRespSuccess(ctx, http.StatusOK, "successfullt delete the product from cart", nil)
+}

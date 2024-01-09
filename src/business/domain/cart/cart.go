@@ -1,6 +1,7 @@
 package cart
 
 import (
+	"errors"
 	"go-clean/src/business/entity"
 
 	"gorm.io/gorm"
@@ -11,6 +12,7 @@ type Interface interface {
 	GetList(param entity.CartParam) ([]entity.Cart, error)
 	Get(param entity.CartParam) (entity.Cart, error)
 	Update(selectParam entity.CartParam, updateParam entity.UpdateCartParam) error
+	Delete(param entity.CartParam) error
 }
 
 type cart struct {
@@ -54,6 +56,14 @@ func (c *cart) Get(param entity.CartParam) (entity.Cart, error) {
 func (c *cart) Update(selectParam entity.CartParam, updateParam entity.UpdateCartParam) error {
 	if err := c.db.Model(entity.Cart{}).Where(selectParam).Updates(updateParam).Error; err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (c *cart) Delete(param entity.CartParam) error {
+	if rowsAffected := c.db.Where(param).Delete(&entity.Cart{}).RowsAffected; rowsAffected == 0 {
+		return errors.New("data not found to be deleted")
 	}
 
 	return nil
