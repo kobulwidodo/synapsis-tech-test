@@ -11,6 +11,7 @@ import (
 type Interface interface {
 	Create(ctx context.Context, cartInput entity.CreateCartParam) (entity.Cart, error)
 	GetList(ctx context.Context) ([]entity.Cart, error)
+	Delete(ctx context.Context, param entity.CartParam) error
 }
 
 type cart struct {
@@ -119,4 +120,21 @@ func (c *cart) GetList(ctx context.Context) ([]entity.Cart, error) {
 	}
 
 	return result, nil
+}
+
+func (c *cart) Delete(ctx context.Context, param entity.CartParam) error {
+	user, err := c.auth.GetUserAuthInfo(ctx)
+	if err != nil {
+		return err
+	}
+
+	if err := c.cart.Delete(entity.CartParam{
+		ID:     param.ID,
+		UserID: user.User.ID,
+		Status: entity.StatusInCart,
+	}); err != nil {
+		return err
+	}
+
+	return nil
 }

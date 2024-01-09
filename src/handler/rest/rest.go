@@ -156,6 +156,7 @@ func (r *rest) Register() {
 	cart := v1.Group("/cart")
 	cart.POST("", r.VerifyUser, r.CreateCart)
 	cart.GET("", r.VerifyUser, r.GetListCart)
+	cart.DELETE("/:cart_id", r.VerifyUser, r.DeleteCart)
 }
 
 func (r *rest) registerSwaggerRoutes() {

@@ -21,7 +21,7 @@ type Cart struct {
 }
 
 type CartParam struct {
-	ID        uint
+	ID        uint `uri:"cart_id"`
 	UserID    uint
 	ProductID uint
 	Status    string

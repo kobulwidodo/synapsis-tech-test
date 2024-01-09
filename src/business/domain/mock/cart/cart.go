@@ -49,6 +49,20 @@ func (mr *MockInterfaceMockRecorder) Create(cart interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockInterface)(nil).Create), cart)
 }
 
+// Delete mocks base method.
+func (m *MockInterface) Delete(param entity.CartParam) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", param)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete.
+func (mr *MockInterfaceMockRecorder) Delete(param interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockInterface)(nil).Delete), param)
+}
+
 // Get mocks base method.
 func (m *MockInterface) Get(param entity.CartParam) (entity.Cart, error) {
 	m.ctrl.T.Helper()
