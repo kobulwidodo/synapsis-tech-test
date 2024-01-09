@@ -25,7 +25,13 @@ run-app:
 mock:
 	@`go env GOPATH`/bin/mockgen -source src/business/domain/$(domain)/$(domain).go -destination src/business/domain/mock/$(domain)/$(domain).go
 
+.PHONY: mock-lib
+mock-lib:
+	@`go env GOPATH`/bin/mockgen -source src/lib/$(domain)/$(domain).go -destination src/lib/tests/mock/$(domain)/$(domain).go
+
 .PHONY: mock-all
 mock-all:
+	@make mock-lib domain=auth
 	@make mock domain=product
 	@make mock domain=category
+	@make mock domain=cart
