@@ -16,6 +16,8 @@ type Cart struct {
 	Qty               int
 	Status            string
 	FinalPricePerItem uint
+	TotalPriceNow     int64   `gorm:"-:all"`
+	Product           Product `gorm:"-:all"`
 }
 
 type CartParam struct {

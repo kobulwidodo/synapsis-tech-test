@@ -8,6 +8,7 @@ import (
 
 type Interface interface {
 	GetList(param entity.ProductParam) ([]entity.Product, error)
+	GetListByID(productIDs []uint) ([]entity.Product, error)
 	Get(param entity.ProductParam) (entity.Product, error)
 }
 
@@ -28,6 +29,15 @@ func (p *product) GetList(param entity.ProductParam) ([]entity.Product, error) {
 	if err := p.db.Where(param).Find(&products).Error; err != nil {
 		return products, err
 	}
+	return products, nil
+}
+
+func (p *product) GetListByID(productIDs []uint) ([]entity.Product, error) {
+	products := []entity.Product{}
+	if err := p.db.Find(&products, productIDs).Error; err != nil {
+		return products, err
+	}
+
 	return products, nil
 }
 

@@ -8,6 +8,7 @@ import (
 
 type Interface interface {
 	Create(cart entity.Cart) (entity.Cart, error)
+	GetList(param entity.CartParam) ([]entity.Cart, error)
 	Get(param entity.CartParam) (entity.Cart, error)
 	Update(selectParam entity.CartParam, updateParam entity.UpdateCartParam) error
 }
@@ -30,6 +31,15 @@ func (c *cart) Create(cart entity.Cart) (entity.Cart, error) {
 	}
 
 	return cart, nil
+}
+
+func (c *cart) GetList(param entity.CartParam) ([]entity.Cart, error) {
+	carts := []entity.Cart{}
+	if err := c.db.Where(param).Find(&carts).Error; err != nil {
+		return carts, err
+	}
+
+	return carts, nil
 }
 
 func (c *cart) Get(param entity.CartParam) (entity.Cart, error) {
