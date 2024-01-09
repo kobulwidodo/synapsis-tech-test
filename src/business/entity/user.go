@@ -13,6 +13,11 @@ type User struct {
 	Name     string
 }
 
+type UserParam struct {
+	ID       uint
+	Username string
+}
+
 type CreateUserParam struct {
 	Username string `binding:"required"`
 	Password string `binding:"required"`

@@ -8,8 +8,7 @@ import (
 
 type Interface interface {
 	Create(user entity.User) (entity.User, error)
-	GetByUsername(username string) (entity.User, error)
-	GetById(id uint) (entity.User, error)
+	Get(param entity.UserParam) (entity.User, error)
 }
 
 type user struct {
@@ -24,28 +23,17 @@ func Init(db *gorm.DB) Interface {
 	return a
 }
 
-func (a *user) Create(user entity.User) (entity.User, error) {
-	if err := a.db.Create(&user).Error; err != nil {
+func (u *user) Create(user entity.User) (entity.User, error) {
+	if err := u.db.Create(&user).Error; err != nil {
 		return user, err
 	}
 
 	return user, nil
 }
 
-func (a *user) GetByUsername(username string) (entity.User, error) {
+func (u *user) Get(param entity.UserParam) (entity.User, error) {
 	user := entity.User{}
-
-	if err := a.db.Where("username = ?", username).First(&user).Error; err != nil {
-		return user, err
-	}
-
-	return user, nil
-}
-
-func (a *user) GetById(id uint) (entity.User, error) {
-	user := entity.User{}
-
-	if err := a.db.Where("id = ?", id).First(&user).Error; err != nil {
+	if err := u.db.Where(param).First(&user).Error; err != nil {
 		return user, err
 	}
 
