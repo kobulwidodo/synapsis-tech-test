@@ -18,6 +18,12 @@ jobs:
         with:
           go-version: 1.18
 
+      - name: Prepare Environment
+        run: |
+          make swag-install
+          go mod download
+          make swaggo
+
       - name: Build
         run: go build -v ./...
 
