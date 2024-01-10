@@ -41,6 +41,7 @@ jobs:
         with:
           push: true
           tags: kobulwidodo/synapsis-tech-test-api:latest
+          platforms: linux/arm64/v8
           build-args: |
             META_TITLE=${{ secrets.META_TITLE }}
             META_DESCRIPTION=${{ secrets.META_DESCRIPTION }}
