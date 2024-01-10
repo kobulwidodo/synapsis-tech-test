@@ -157,6 +157,12 @@ func (r *rest) Register() {
 	cart.POST("", r.VerifyUser, r.CreateCart)
 	cart.GET("", r.VerifyUser, r.GetListCart)
 	cart.DELETE("/:cart_id", r.VerifyUser, r.DeleteCart)
+
+	transaction := v1.Group("/transaction")
+	transaction.POST("", r.VerifyUser, r.CreateOrder)
+
+	midtransTransaction := v1.Group("/midtrans-transaction")
+	midtransTransaction.POST("/handle", r.HandleNotification)
 }
 
 func (r *rest) registerSwaggerRoutes() {

@@ -34,5 +34,6 @@ func (u *User) ConvertToAuthUser() auth.User {
 		ID:       u.ID,
 		Username: u.Username,
 		Password: u.Password,
+		Name:     u.Name,
 	}
 }

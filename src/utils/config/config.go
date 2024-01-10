@@ -1,14 +1,16 @@
 package config
 
 import (
+	"go-clean/src/lib/midtrans"
 	"go-clean/src/lib/sql"
 	"time"
 )
 
 type Application struct {
-	Meta ApplicationMeta
-	Gin  GinConfig
-	SQL  sql.Config
+	Meta     ApplicationMeta
+	Gin      GinConfig
+	SQL      sql.Config
+	Midtrans midtrans.Config
 }
 
 type ApplicationMeta struct {

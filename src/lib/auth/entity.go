@@ -10,6 +10,6 @@ type User struct {
 	GuestId  string
 	Username string
 	Password string
-	Nama     string
+	Name     string
 	IsAdmin  bool
 }
