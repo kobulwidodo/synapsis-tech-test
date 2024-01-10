@@ -44,12 +44,6 @@ RUN `go env GOPATH`/bin/swag init -g src/cmd/main.go -o docs/swagger --parseInte
 # Run go mod tidy to clean up the dependencies
 RUN go mod tidy
 
-RUN ls
-
-RUN ls ./etc/
-
-RUN ls ./etc/cfg/
-
 # Build the Go application
 RUN go build -o binary ./src/cmd
 
