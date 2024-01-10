@@ -23,7 +23,7 @@ func Init(cfg Config) *gorm.DB {
 		panic(err)
 	}
 
-	if err := db.AutoMigrate(&entity.User{}, &entity.Category{}, &entity.Product{}, &entity.Cart{}); err != nil {
+	if err := db.AutoMigrate(&entity.User{}, &entity.Category{}, &entity.Product{}, &entity.Cart{}, &entity.Transaction{}, &entity.MidtransTransaction{}); err != nil {
 		panic(err)
 	}
 

@@ -36,3 +36,6 @@ mock-all:
 	@make mock domain=user
 	@make mock domain=category
 	@make mock domain=cart
+	@make mock domain=midtrans
+	@make mock domain=midtrans_transaction
+	@make mock domain=transaction

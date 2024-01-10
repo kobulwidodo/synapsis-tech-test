@@ -5,7 +5,7 @@ import "gorm.io/gorm"
 const (
 	StatusInCart = "in_cart"
 	StatusUnpaid = "unpaid"
-	StuatusPaid  = "paid"
+	StatusPaid   = "paid"
 )
 
 type Cart struct {
@@ -15,16 +15,17 @@ type Cart struct {
 	TransactionID     uint
 	Qty               int
 	Status            string
-	FinalPricePerItem uint
+	FinalPricePerItem int
 	TotalPriceNow     int64   `gorm:"-:all"`
 	Product           Product `gorm:"-:all"`
 }
 
 type CartParam struct {
-	ID        uint `uri:"cart_id"`
-	UserID    uint
-	ProductID uint
-	Status    string
+	ID            uint `uri:"cart_id"`
+	UserID        uint
+	ProductID     uint
+	Status        string
+	TransactionID uint
 }
 
 type CreateCartParam struct {
@@ -33,5 +34,8 @@ type CreateCartParam struct {
 }
 
 type UpdateCartParam struct {
-	Qty int
+	Qty               int
+	Status            string
+	TransactionID     uint
+	FinalPricePerItem int
 }
