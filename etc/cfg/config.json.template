@@ -31,5 +31,8 @@
     "Password": "",
     "Port": "3306",
     "Database": "dbname"
+  },
+  "Midtrans": {
+    "ServerKey": "serverkey"
   }
 }

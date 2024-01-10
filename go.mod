@@ -64,6 +64,7 @@ require (
 	github.com/gin-gonic/gin v1.9.0
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/midtrans/midtrans-go v1.3.7
 	github.com/stretchr/testify v1.8.4
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
