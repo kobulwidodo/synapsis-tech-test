@@ -26,12 +26,12 @@ ARG SQL_PORT
 ARG SQL_DATABASE
 ARG MIDTRANS_SERVERKEY
 
-RUN ls
+RUN ls -l
 
 # Create the config directory
 RUN mkdir -p /etc/cfg
 
-RUN ls /etc/cfg/
+RUN ls -l /etc/cfg/
 
 # Create config.json file from build arguments
 RUN printf '{\n  "Meta": {\n    "Title": "%s",\n    "Description": "%s",\n    "Host": "%s",\n    "Basepath": "%s",\n    "Version": "%s"\n  },\n  "Gin": {\n    "Host": "%s",\n    "Port": "%s",\n    "Mode": "%s",\n    "Timeout": "%s",\n    "ShutdownTimeout": "%s",\n    "LogRequest": "%s",\n    "LogResponse": "%s",\n    "CORS": {\n      "Mode": "%s"\n    }\n  },\n  "SQL": {\n    "Host": "%s",\n    "Username": "%s",\n    "Password": "%s",\n    "Port": "%s",\n    "Database": "%s"\n  },\n  "Midtrans": {\n    "ServerKey": "%s"\n  }\n}' "$META_TITLE" "$META_DESCRIPTION" "$META_HOST" "$META_BASEPATH" "$META_VERSION" "$GIN_HOST" "$GIN_PORT" "$GIN_MODE" "$GIN_TIMEOUT" "$GIN_SHUTDOWNTIMEOUT" "$GIN_LOGREQUEST" "$GIN_LOGRESPONSE" "$GIN_CORS_MODE" "$SQL_HOST" "$SQL_USERNAME" "$SQL_PASSWORD" "$SQL_PORT" "$SQL_DATABASE" "$MIDTRANS_SERVERKEY" > /etc/cfg/config.json
