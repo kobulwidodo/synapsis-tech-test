@@ -20,6 +20,7 @@ import (
 
 type Interface interface {
 	Create(ctx context.Context, createParam entity.CreateTransactionParam) (entity.Transaction, error)
+	ValidateTransaction(ctx context.Context, transactionID uint, user auth.UserAuthInfo) error
 }
 
 type transaction struct {
@@ -174,4 +175,23 @@ func (t *transaction) convertToItemsDetails(carts []entity.Cart, products map[ui
 	}
 
 	return res
+}
+
+func (t *transaction) ValidateTransaction(ctx context.Context, transactionID uint, user auth.UserAuthInfo) error {
+	if transactionID == 0 {
+		return errors.New("please provide transaction id")
+	}
+
+	transaction, err := t.transaction.Get(entity.TransactionParam{
+		ID: transactionID,
+	})
+	if err != nil {
+		return err
+	}
+
+	if transaction.UserID != user.User.ID {
+		return errors.New("unauthorized")
+	}
+
+	return nil
 }
