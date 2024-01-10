@@ -6,6 +6,7 @@ import (
 	"go-clean/src/business/entity"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -88,4 +89,22 @@ func (r *rest) ValidateToken(encodedToken string) (*jwt.Token, error) {
 	}
 
 	return token, nil
+}
+
+func (r *rest) VerifyTransaction(ctx *gin.Context) {
+	user, err := r.auth.GetUserAuthInfo(ctx.Request.Context())
+	if err != nil {
+		r.httpRespError(ctx, http.StatusUnauthorized, err)
+		return
+	}
+
+	transactionIDp := ctx.Param("transaction_id")
+	umkmID, _ := strconv.Atoi(transactionIDp)
+
+	if err := r.uc.Transaction.ValidateTransaction(ctx, uint(umkmID), user); err != nil {
+		r.httpRespError(ctx, http.StatusUnauthorized, err)
+		return
+	}
+
+	ctx.Next()
 }

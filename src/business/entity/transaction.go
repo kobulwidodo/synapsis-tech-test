@@ -13,3 +13,7 @@ type CreateTransactionParam struct {
 	AddressShip string `binding:"required"`
 	PaymentID   int    `binding:"required"`
 }
+
+type TransactionParam struct {
+	ID uint
+}

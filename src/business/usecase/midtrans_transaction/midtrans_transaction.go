@@ -1,6 +1,7 @@
 package midtranstransaction
 
 import (
+	"encoding/json"
 	"errors"
 	cartDom "go-clean/src/business/domain/cart"
 	midtransDom "go-clean/src/business/domain/midtrans"
@@ -9,6 +10,7 @@ import (
 )
 
 type Interface interface {
+	GetPaymentDetail(param entity.MidtransTransactionParam) (entity.MidtransTransactionPaymentDetail, error)
 	HandleNotification(payload map[string]interface{}) error
 }
 
@@ -26,6 +28,26 @@ func Init(mttd midtransTransactionDom.Interface, md midtransDom.Interface, cd ca
 	}
 
 	return mtt
+}
+
+func (mtt *midtransTransaction) GetPaymentDetail(param entity.MidtransTransactionParam) (entity.MidtransTransactionPaymentDetail, error) {
+	result := entity.MidtransTransactionPaymentDetail{}
+
+	midtransTransaction, err := mtt.midtransTransaction.Get(param)
+	if err != nil {
+		return result, err
+	}
+
+	paymentData := entity.PaymentData{}
+	if err := json.Unmarshal([]byte(midtransTransaction.PaymentData), &paymentData); err != nil {
+		return result, err
+	}
+
+	result.Status = midtransTransaction.Status
+	result.PaymentData = paymentData
+	result.MidtransID = midtransTransaction.OrderID
+
+	return result, nil
 }
 
 func (mtt *midtransTransaction) HandleNotification(payload map[string]interface{}) error {

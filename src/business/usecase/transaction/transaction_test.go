@@ -386,3 +386,109 @@ func Test_transaction_Create(t *testing.T) {
 		})
 	}
 }
+
+func Test_transaction_ValidateTransaction(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	transactionMock := mock_transaction.NewMockInterface(ctrl)
+
+	tr := transaction.Init(nil, transactionMock, nil, nil, nil, nil)
+
+	authUserMock := auth.UserAuthInfo{
+		User: auth.User{
+			ID: 1,
+		},
+	}
+
+	authUserFailedMock := auth.UserAuthInfo{
+		User: auth.User{
+			ID: 2,
+		},
+	}
+
+	transactionParamMock := entity.TransactionParam{
+		ID: 1,
+	}
+
+	transactionResultMock := entity.Transaction{
+		UserID: 1,
+	}
+
+	type mockFields struct {
+		transaction *mock_transaction.MockInterface
+	}
+
+	mocks := mockFields{
+		transaction: transactionMock,
+	}
+
+	type args struct {
+		ctx           context.Context
+		transactionID uint
+		user          auth.UserAuthInfo
+	}
+
+	tests := []struct {
+		name     string
+		args     args
+		mockFunc func(mock mockFields, arg args)
+		wantErr  bool
+	}{
+		{
+			name: "failed transaction id = 0",
+			args: args{
+				ctx:           context.Background(),
+				transactionID: 0,
+			},
+			mockFunc: func(mock mockFields, arg args) {},
+			wantErr:  true,
+		},
+		{
+			name: "failed to get cart",
+			args: args{
+				ctx:           context.Background(),
+				transactionID: 1,
+				user:          authUserMock,
+			},
+			mockFunc: func(mock mockFields, arg args) {
+				mock.transaction.EXPECT().Get(transactionParamMock).Return(entity.Transaction{}, assert.AnError)
+			},
+			wantErr: true,
+		},
+		{
+			name: "failed unauthorized",
+			args: args{
+				ctx:           context.Background(),
+				transactionID: 1,
+				user:          authUserFailedMock,
+			},
+			mockFunc: func(mock mockFields, arg args) {
+				mock.transaction.EXPECT().Get(transactionParamMock).Return(transactionResultMock, nil)
+			},
+			wantErr: true,
+		},
+		{
+			name: "all success",
+			args: args{
+				ctx:           context.Background(),
+				transactionID: 1,
+				user:          authUserMock,
+			},
+			mockFunc: func(mock mockFields, arg args) {
+				mock.transaction.EXPECT().Get(transactionParamMock).Return(transactionResultMock, nil)
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.mockFunc(mocks, tt.args)
+			err := tr.ValidateTransaction(tt.args.ctx, tt.args.transactionID, tt.args.user)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("menu.ValidateMenu() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+		})
+	}
+}

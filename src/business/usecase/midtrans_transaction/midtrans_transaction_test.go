@@ -1,6 +1,7 @@
 package midtranstransaction_test
 
 import (
+	"encoding/json"
 	mock_cart "go-clean/src/business/domain/mock/cart"
 	mock_midtrans "go-clean/src/business/domain/mock/midtrans"
 	mock_midtranstransaction "go-clean/src/business/domain/mock/midtrans_transaction"
@@ -14,6 +15,92 @@ import (
 	"go.uber.org/mock/gomock"
 	"gorm.io/gorm"
 )
+
+func Test_midtransTransaction_GetPaymentDetail(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	midtransTransactionMock := mock_midtranstransaction.NewMockInterface(ctrl)
+
+	midtransTransactionParamMock := entity.MidtransTransactionParam{
+		ID: 1,
+	}
+
+	paymentDataMock := entity.PaymentData{
+		Key: "key",
+		Qr:  "qr",
+	}
+
+	paymentDataMarshalledMock, _ := json.Marshal(paymentDataMock)
+
+	midtransTransactionResultMock := entity.MidtransTransaction{
+		PaymentData: string(paymentDataMarshalledMock),
+		OrderID:     "1",
+		Status:      entity.StatusSuccess,
+	}
+
+	resultMock := entity.MidtransTransactionPaymentDetail{
+		Status:      entity.StatusSuccess,
+		PaymentData: paymentDataMock,
+		MidtransID:  "1",
+	}
+
+	mt := midtranstransaction.Init(midtransTransactionMock, nil, nil)
+
+	type mockFields struct {
+		midtrans_transaction *mock_midtranstransaction.MockInterface
+	}
+
+	mocks := mockFields{
+		midtrans_transaction: midtransTransactionMock,
+	}
+
+	type args struct {
+		param entity.MidtransTransactionParam
+	}
+
+	tests := []struct {
+		name     string
+		args     args
+		mockFunc func(mock mockFields, arg args)
+		want     entity.MidtransTransactionPaymentDetail
+		wantErr  bool
+	}{
+		{
+			name: "failed to get midtrans transaction",
+			args: args{
+				param: midtransTransactionParamMock,
+			},
+			mockFunc: func(mock mockFields, arg args) {
+				mock.midtrans_transaction.EXPECT().Get(midtransTransactionParamMock).Return(entity.MidtransTransaction{}, assert.AnError)
+			},
+			want:    entity.MidtransTransactionPaymentDetail{},
+			wantErr: true,
+		},
+		{
+			name: "all success",
+			args: args{
+				param: midtransTransactionParamMock,
+			},
+			mockFunc: func(mock mockFields, arg args) {
+				mock.midtrans_transaction.EXPECT().Get(midtransTransactionParamMock).Return(midtransTransactionResultMock, nil)
+			},
+			want:    resultMock,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.mockFunc(mocks, tt.args)
+			got, err := mt.GetPaymentDetail(tt.args.param)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("midtransTransaction.Create() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
 
 func Test_midtransTransaction_HandleNotification(t *testing.T) {
 	ctrl := gomock.NewController(t)

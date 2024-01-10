@@ -160,6 +160,7 @@ func (r *rest) Register() {
 
 	transaction := v1.Group("/transaction")
 	transaction.POST("", r.VerifyUser, r.CreateOrder)
+	transaction.GET("/:transaction_id/payment-detail", r.VerifyUser, r.VerifyTransaction, r.GetPaymentDetail)
 
 	midtransTransaction := v1.Group("/midtrans-transaction")
 	midtransTransaction.POST("/handle", r.HandleNotification)
