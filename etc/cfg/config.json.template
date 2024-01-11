@@ -34,5 +34,16 @@
   },
   "Midtrans": {
     "ServerKey": "serverkey"
-  }
+  },
+  "Redis": {
+    "Protocol": "",
+    "Host": "localhost",
+    "Port": "6379",
+    "Username": "",
+    "Password": "",
+    "TLS": {
+      "Enabled": "",
+      "InsecureSkipVerify": ""
+    }
+  },
 }

@@ -38,7 +38,7 @@ func (c *cart) Create(ctx context.Context, cartInput entity.CreateCartParam) (en
 		return result, err
 	}
 
-	product, err := c.product.Get(entity.ProductParam{
+	product, err := c.product.Get(ctx, entity.ProductParam{
 		ID: cartInput.ProductID,
 	})
 	if err != nil {
@@ -104,7 +104,7 @@ func (c *cart) GetList(ctx context.Context) ([]entity.Cart, error) {
 		productIDs = append(productIDs, id)
 	}
 
-	products, err := c.product.GetListByID(productIDs)
+	products, err := c.product.GetListByID(ctx, productIDs)
 	if err != nil {
 		return result, err
 	}

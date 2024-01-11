@@ -7,6 +7,7 @@ import (
 	"go-clean/src/lib/auth"
 	"go-clean/src/lib/configreader"
 	"go-clean/src/lib/midtrans"
+	"go-clean/src/lib/redis"
 	"go-clean/src/lib/sql"
 	"go-clean/src/utils/config"
 
@@ -38,7 +39,9 @@ func main() {
 
 	db := sql.Init(cfg.SQL)
 
-	d := domain.Init(db, midtrans)
+	redis := redis.Init(cfg.Redis)
+
+	d := domain.Init(db, midtrans, redis)
 
 	uc := usecase.Init(auth, d)
 

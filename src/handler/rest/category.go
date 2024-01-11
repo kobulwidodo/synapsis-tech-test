@@ -18,7 +18,7 @@ import (
 // @Failure 500 {object} entity.Response{}
 // @Router /api/v1/category [GET]
 func (r *rest) GetListCategory(ctx *gin.Context) {
-	categories, err := r.uc.Category.GetList()
+	categories, err := r.uc.Category.GetList(ctx.Request.Context())
 	if err != nil {
 		r.httpRespError(ctx, http.StatusInternalServerError, err)
 		return

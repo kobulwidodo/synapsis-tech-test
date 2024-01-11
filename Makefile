@@ -32,6 +32,7 @@ mock-lib:
 .PHONY: mock-all
 mock-all:
 	@make mock-lib domain=auth
+	@make mock-lib domain=redis
 	@make mock domain=product
 	@make mock domain=user
 	@make mock domain=category

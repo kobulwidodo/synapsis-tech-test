@@ -9,6 +9,7 @@ import (
 	"go-clean/src/business/domain/transaction"
 	"go-clean/src/business/domain/user"
 	midtransSdk "go-clean/src/lib/midtrans"
+	"go-clean/src/lib/redis"
 
 	"gorm.io/gorm"
 )
@@ -23,11 +24,11 @@ type Domains struct {
 	MidtransTransaction midtranstransaction.Interface
 }
 
-func Init(db *gorm.DB, m midtransSdk.Interface) *Domains {
+func Init(db *gorm.DB, m midtransSdk.Interface, redis redis.Interface) *Domains {
 	d := &Domains{
 		User:                user.Init(db),
-		Category:            category.Init(db),
-		Product:             product.Init(db),
+		Category:            category.Init(db, redis),
+		Product:             product.Init(db, redis),
 		Cart:                cart.Init(db),
 		Midtrans:            midtrans.Init(m),
 		Transaction:         transaction.Init(db),

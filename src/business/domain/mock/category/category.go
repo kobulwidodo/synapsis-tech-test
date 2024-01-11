@@ -5,6 +5,7 @@
 package mock_category
 
 import (
+	context "context"
 	entity "go-clean/src/business/entity"
 	reflect "reflect"
 
@@ -35,16 +36,16 @@ func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
 }
 
 // GetList mocks base method.
-func (m *MockInterface) GetList() ([]entity.Category, error) {
+func (m *MockInterface) GetList(ctx context.Context) ([]entity.Category, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetList")
+	ret := m.ctrl.Call(m, "GetList", ctx)
 	ret0, _ := ret[0].([]entity.Category)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetList indicates an expected call of GetList.
-func (mr *MockInterfaceMockRecorder) GetList() *gomock.Call {
+func (mr *MockInterfaceMockRecorder) GetList(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetList", reflect.TypeOf((*MockInterface)(nil).GetList))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetList", reflect.TypeOf((*MockInterface)(nil).GetList), ctx)
 }
