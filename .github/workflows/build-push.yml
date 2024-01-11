@@ -1,0 +1,80 @@
+name: Go Build and Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - name: Prepare Environment
+        run: |
+          make swag-install
+          go mod download
+          make swaggo
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Test
+        run: go test -v ./...
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: kobulwidodo/synapsis-tech-test-api:latest
+          platforms: linux/amd64,linux/arm64
+          build-args: |
+            META_TITLE=${{ secrets.META_TITLE }}
+            META_DESCRIPTION=${{ secrets.META_DESCRIPTION }}
+            META_HOST=${{ secrets.META_HOST }}
+            META_BASEPATH=${{ secrets.META_BASEPATH }}
+            META_VERSION=${{ secrets.META_VERSION }}
+            GIN_HOST=${{ secrets.GIN_HOST }}
+            GIN_PORT=${{ secrets.GIN_PORT }}
+            GIN_MODE=${{ secrets.GIN_MODE }}
+            GIN_TIMEOUT=${{ secrets.GIN_TIMEOUT }}
+            GIN_SHUTDOWNTIMEOUT=${{ secrets.GIN_SHUTDOWNTIMEOUT }}
+            GIN_LOGREQUEST=${{ secrets.GIN_LOGREQUEST }}
+            GIN_LOGRESPONSE=${{ secrets.GIN_LOGRESPONSE }}
+            GIN_CORS_MODE=${{ secrets.GIN_CORS_MODE }}
+            SQL_HOST=${{ secrets.SQL_HOST }}
+            SQL_USERNAME=${{ secrets.SQL_USERNAME }}
+            SQL_PASSWORD=${{ secrets.SQL_PASSWORD }}
+            SQL_PORT=${{ secrets.SQL_PORT }}
+            SQL_DATABASE=${{ secrets.SQL_DATABASE }}
+            MIDTRANS_SERVERKEY=${{ secrets.MIDTRANS_SERVERKEY }}
+
+      # - name: Deploy to EC2
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.HOST_AWS }}
+      #     username: ${{ secrets.USERNAME_AWS }}
+      #     key: ${{ secrets.KEY_AWS }}
+      #     script: |
+      #       sudo docker pull kobulwidodo/synapsis-tech-test-api:latest
+      #       sudo docker container rm -f go-app || true
+      #       sudo docker container create --name go-app -p 8080:8080 kobulwidodo/synapsis-tech-test-api:latest
+      #       sudo docker container start go-app
