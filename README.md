@@ -33,10 +33,9 @@ cd etc/cfg
 cp config.json.template config.json
 ```
 
-Run this command line to create database using docker compose :
+Run this command line to create database and redis using docker compose :
 
 ```shell
-cd env
 docker-compose up -d
 ```
 
@@ -53,3 +52,15 @@ Start the application by running:
 ```shell
 make run-app
 ```
+
+## How to Run the Test
+
+Run this command to run test:
+
+```shell
+make run-tests
+```
+
+## Swagger Docs
+
+http://localhost:8080/swagger/index.html#/
