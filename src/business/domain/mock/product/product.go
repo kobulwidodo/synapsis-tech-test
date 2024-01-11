@@ -5,6 +5,7 @@
 package mock_product
 
 import (
+	context "context"
 	entity "go-clean/src/business/entity"
 	reflect "reflect"
 
@@ -35,46 +36,46 @@ func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
 }
 
 // Get mocks base method.
-func (m *MockInterface) Get(param entity.ProductParam) (entity.Product, error) {
+func (m *MockInterface) Get(ctx context.Context, param entity.ProductParam) (entity.Product, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Get", param)
+	ret := m.ctrl.Call(m, "Get", ctx, param)
 	ret0, _ := ret[0].(entity.Product)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Get indicates an expected call of Get.
-func (mr *MockInterfaceMockRecorder) Get(param interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) Get(ctx, param interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockInterface)(nil).Get), param)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockInterface)(nil).Get), ctx, param)
 }
 
 // GetList mocks base method.
-func (m *MockInterface) GetList(param entity.ProductParam) ([]entity.Product, error) {
+func (m *MockInterface) GetList(ctx context.Context, param entity.ProductParam) ([]entity.Product, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetList", param)
+	ret := m.ctrl.Call(m, "GetList", ctx, param)
 	ret0, _ := ret[0].([]entity.Product)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetList indicates an expected call of GetList.
-func (mr *MockInterfaceMockRecorder) GetList(param interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) GetList(ctx, param interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetList", reflect.TypeOf((*MockInterface)(nil).GetList), param)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetList", reflect.TypeOf((*MockInterface)(nil).GetList), ctx, param)
 }
 
 // GetListByID mocks base method.
-func (m *MockInterface) GetListByID(productIDs []uint) ([]entity.Product, error) {
+func (m *MockInterface) GetListByID(ctx context.Context, productIDs []uint) ([]entity.Product, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetListByID", productIDs)
+	ret := m.ctrl.Call(m, "GetListByID", ctx, productIDs)
 	ret0, _ := ret[0].([]entity.Product)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetListByID indicates an expected call of GetListByID.
-func (mr *MockInterfaceMockRecorder) GetListByID(productIDs interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) GetListByID(ctx, productIDs interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetListByID", reflect.TypeOf((*MockInterface)(nil).GetListByID), productIDs)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetListByID", reflect.TypeOf((*MockInterface)(nil).GetListByID), ctx, productIDs)
 }
