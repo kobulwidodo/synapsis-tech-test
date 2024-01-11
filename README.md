@@ -60,3 +60,7 @@ Run this command to run test:
 ```shell
 make run-tests
 ```
+
+## Swagger Docs
+
+http://localhost:8080/swagger/index.html#/
