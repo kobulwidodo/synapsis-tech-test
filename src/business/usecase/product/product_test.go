@@ -1,6 +1,7 @@
 package product_test
 
 import (
+	"context"
 	mock_product "go-clean/src/business/domain/mock/product"
 	"go-clean/src/business/entity"
 	"go-clean/src/business/usecase/product"
@@ -34,6 +35,7 @@ func Test_product_GetList(t *testing.T) {
 	}
 
 	type args struct {
+		ctx   context.Context
 		param entity.ProductParam
 	}
 
@@ -47,10 +49,11 @@ func Test_product_GetList(t *testing.T) {
 		{
 			name: "failed to get products",
 			args: args{
+				ctx:   context.Background(),
 				param: productParamMock,
 			},
 			mockFunc: func(mock mockFields, arg args) {
-				mock.product.EXPECT().GetList(productParamMock).Return([]entity.Product{}, assert.AnError)
+				mock.product.EXPECT().GetList(context.Background(), productParamMock).Return([]entity.Product{}, assert.AnError)
 			},
 			want:    []entity.Product{},
 			wantErr: true,
@@ -58,10 +61,11 @@ func Test_product_GetList(t *testing.T) {
 		{
 			name: "all ok",
 			args: args{
+				ctx:   context.Background(),
 				param: productParamMock,
 			},
 			mockFunc: func(mock mockFields, arg args) {
-				mock.product.EXPECT().GetList(productParamMock).Return(productOkResult, nil)
+				mock.product.EXPECT().GetList(context.Background(), productParamMock).Return(productOkResult, nil)
 			},
 			want:    productOkResult,
 			wantErr: false,
@@ -70,7 +74,7 @@ func Test_product_GetList(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mockFunc(mocks, tt.args)
-			got, err := p.GetList(tt.args.param)
+			got, err := p.GetList(tt.args.ctx, tt.args.param)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("product.GetList() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -102,6 +106,7 @@ func Test_product_Get(t *testing.T) {
 	}
 
 	type args struct {
+		ctx   context.Context
 		param entity.ProductParam
 	}
 
@@ -115,10 +120,11 @@ func Test_product_Get(t *testing.T) {
 		{
 			name: "failed to get products",
 			args: args{
+				ctx:   context.Background(),
 				param: productParamMock,
 			},
 			mockFunc: func(mock mockFields, arg args) {
-				mock.product.EXPECT().Get(productParamMock).Return(entity.Product{}, assert.AnError)
+				mock.product.EXPECT().Get(context.Background(), productParamMock).Return(entity.Product{}, assert.AnError)
 			},
 			want:    entity.Product{},
 			wantErr: true,
@@ -126,10 +132,11 @@ func Test_product_Get(t *testing.T) {
 		{
 			name: "all ok",
 			args: args{
+				ctx:   context.Background(),
 				param: productParamMock,
 			},
 			mockFunc: func(mock mockFields, arg args) {
-				mock.product.EXPECT().Get(productParamMock).Return(productOkResult, nil)
+				mock.product.EXPECT().Get(context.Background(), productParamMock).Return(productOkResult, nil)
 			},
 			want:    productOkResult,
 			wantErr: false,
@@ -138,7 +145,7 @@ func Test_product_Get(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mockFunc(mocks, tt.args)
-			got, err := p.Get(tt.args.param)
+			got, err := p.Get(tt.args.ctx, tt.args.param)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("product.Get() error = %v, wantErr %v", err, tt.wantErr)
 				return

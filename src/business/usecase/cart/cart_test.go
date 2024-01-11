@@ -122,7 +122,7 @@ func Test_cart_Create(t *testing.T) {
 			},
 			mockFunc: func(mock mockFields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
-				mock.product.EXPECT().Get(productParamMock).Return(entity.Product{}, assert.AnError)
+				mock.product.EXPECT().Get(context.Background(), productParamMock).Return(entity.Product{}, assert.AnError)
 			},
 			want:    entity.Cart{},
 			wantErr: true,
@@ -135,7 +135,7 @@ func Test_cart_Create(t *testing.T) {
 			},
 			mockFunc: func(mock mockFields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
-				mock.product.EXPECT().Get(productParamMock).Return(productResultMock, nil)
+				mock.product.EXPECT().Get(context.Background(), productParamMock).Return(productResultMock, nil)
 				mock.cart.EXPECT().Get(cartParamMock).Return(cartResultMock, nil)
 				mock.cart.EXPECT().Update(cartUpdateParamMock, cartUpdateMock).Return(assert.AnError)
 			},
@@ -150,7 +150,7 @@ func Test_cart_Create(t *testing.T) {
 			},
 			mockFunc: func(mock mockFields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
-				mock.product.EXPECT().Get(productParamMock).Return(productResultMock, nil)
+				mock.product.EXPECT().Get(context.Background(), productParamMock).Return(productResultMock, nil)
 				mock.cart.EXPECT().Get(cartParamMock).Return(cartResultMock, nil)
 				mock.cart.EXPECT().Update(cartUpdateParamMock, cartUpdateMock).Return(nil)
 			},
@@ -165,7 +165,7 @@ func Test_cart_Create(t *testing.T) {
 			},
 			mockFunc: func(mock mockFields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
-				mock.product.EXPECT().Get(productParamMock).Return(productResultMock, nil)
+				mock.product.EXPECT().Get(context.Background(), productParamMock).Return(productResultMock, nil)
 				mock.cart.EXPECT().Get(cartParamMock).Return(entity.Cart{}, nil)
 				mock.cart.EXPECT().Create(createCartMock).Return(entity.Cart{}, assert.AnError)
 			},
@@ -180,7 +180,7 @@ func Test_cart_Create(t *testing.T) {
 			},
 			mockFunc: func(mock mockFields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
-				mock.product.EXPECT().Get(productParamMock).Return(productResultMock, nil)
+				mock.product.EXPECT().Get(context.Background(), productParamMock).Return(productResultMock, nil)
 				mock.cart.EXPECT().Get(cartParamMock).Return(entity.Cart{}, nil)
 				mock.cart.EXPECT().Create(createCartMock).Return(createCartMock, nil)
 			},
@@ -315,7 +315,7 @@ func Test_cart_GetList(t *testing.T) {
 			mockFunc: func(mock mockFields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
 				mock.cart.EXPECT().GetList(cartParamMock).Return(cartResultMock, nil)
-				mock.product.EXPECT().GetListByID(productIDsMock).Return([]entity.Product{}, assert.AnError)
+				mock.product.EXPECT().GetListByID(context.Background(), productIDsMock).Return([]entity.Product{}, assert.AnError)
 			},
 			want:    cartResultMock,
 			wantErr: true,
@@ -328,7 +328,7 @@ func Test_cart_GetList(t *testing.T) {
 			mockFunc: func(mock mockFields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
 				mock.cart.EXPECT().GetList(cartParamMock).Return(cartResultMock, nil)
-				mock.product.EXPECT().GetListByID(productIDsMock).Return(productResultMock, nil)
+				mock.product.EXPECT().GetListByID(context.Background(), productIDsMock).Return(productResultMock, nil)
 			},
 			want:    resultMock,
 			wantErr: false,

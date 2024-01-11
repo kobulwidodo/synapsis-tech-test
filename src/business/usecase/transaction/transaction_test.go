@@ -244,7 +244,7 @@ func Test_transaction_Create(t *testing.T) {
 			mockFunc: func(mock mockfields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
 				mock.cart.EXPECT().GetList(cartParamMock).Return(cartResultMock, nil)
-				mock.product.EXPECT().GetListByID([]uint{1}).Return([]entity.Product{}, assert.AnError)
+				mock.product.EXPECT().GetListByID(context.Background(), []uint{1}).Return([]entity.Product{}, assert.AnError)
 			},
 			args: args{
 				ctx:   context.Background(),
@@ -258,7 +258,7 @@ func Test_transaction_Create(t *testing.T) {
 			mockFunc: func(mock mockfields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
 				mock.cart.EXPECT().GetList(cartParamMock).Return(cartResultMock, nil)
-				mock.product.EXPECT().GetListByID([]uint{1}).Return(productResultMock, nil)
+				mock.product.EXPECT().GetListByID(context.Background(), []uint{1}).Return(productResultMock, nil)
 				mock.transaction.EXPECT().Create(newTransactionMock).Return(transactionResultMock, assert.AnError)
 			},
 			args: args{
@@ -273,7 +273,7 @@ func Test_transaction_Create(t *testing.T) {
 			mockFunc: func(mock mockfields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
 				mock.cart.EXPECT().GetList(cartParamMock).Return(cartResultMock, nil)
-				mock.product.EXPECT().GetListByID([]uint{1}).Return(productResultMock, nil)
+				mock.product.EXPECT().GetListByID(context.Background(), []uint{1}).Return(productResultMock, nil)
 				mock.transaction.EXPECT().Create(newTransactionMock).Return(transactionResultMock, nil)
 				mock.midtrans.EXPECT().Create(midtransCreateParamMock).Return(nil, assert.AnError)
 			},
@@ -289,7 +289,7 @@ func Test_transaction_Create(t *testing.T) {
 			mockFunc: func(mock mockfields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
 				mock.cart.EXPECT().GetList(cartParamMock).Return(cartResultMock, nil)
-				mock.product.EXPECT().GetListByID([]uint{1}).Return(productResultMock, nil)
+				mock.product.EXPECT().GetListByID(context.Background(), []uint{1}).Return(productResultMock, nil)
 				mock.transaction.EXPECT().Create(newTransactionMock).Return(transactionResultMock, nil)
 				mock.midtrans.EXPECT().Create(midtransCreateParamMock).Return(midtransResultMock, nil)
 				mock.cart.EXPECT().Update(selectParamCartMock, updateParamCartMock).Return(assert.AnError)
@@ -306,7 +306,7 @@ func Test_transaction_Create(t *testing.T) {
 			mockFunc: func(mock mockfields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
 				mock.cart.EXPECT().GetList(cartParamMock).Return(cartResultMock, nil)
-				mock.product.EXPECT().GetListByID([]uint{1}).Return(productResultMock, nil)
+				mock.product.EXPECT().GetListByID(context.Background(), []uint{1}).Return(productResultMock, nil)
 				mock.transaction.EXPECT().Create(newTransactionMock).Return(transactionResultMock, nil)
 				mock.midtrans.EXPECT().Create(midtransCreateParamUndifinedMock).Return(midtransResultMock, nil)
 			},
@@ -322,7 +322,7 @@ func Test_transaction_Create(t *testing.T) {
 			mockFunc: func(mock mockfields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
 				mock.cart.EXPECT().GetList(cartParamMock).Return(cartResultMock, nil)
-				mock.product.EXPECT().GetListByID([]uint{1}).Return(productResultMock, nil)
+				mock.product.EXPECT().GetListByID(context.Background(), []uint{1}).Return(productResultMock, nil)
 				mock.transaction.EXPECT().Create(newTransactionMock).Return(transactionResultMock, nil)
 				mock.midtrans.EXPECT().Create(midtransCreateParamMock).Return(midtransResultMock, nil)
 				mock.cart.EXPECT().Update(selectParamCartMock, updateParamCartMock).Return(nil)
@@ -340,7 +340,7 @@ func Test_transaction_Create(t *testing.T) {
 			mockFunc: func(mock mockfields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
 				mock.cart.EXPECT().GetList(cartParamMock).Return(cartResultMock, nil)
-				mock.product.EXPECT().GetListByID([]uint{1}).Return(productResultMock, nil)
+				mock.product.EXPECT().GetListByID(context.Background(), []uint{1}).Return(productResultMock, nil)
 				mock.transaction.EXPECT().Create(newTransactionMock).Return(transactionResultMock, nil)
 				mock.midtrans.EXPECT().Create(midtransCreateParamMock).Return(midtransResultMock, nil)
 				mock.cart.EXPECT().Update(selectParamCartMock, updateParamCartMock).Return(nil)
@@ -359,7 +359,7 @@ func Test_transaction_Create(t *testing.T) {
 			mockFunc: func(mock mockfields, arg args) {
 				mock.auth.EXPECT().GetUserAuthInfo(context.Background()).Return(userAuthMock, nil)
 				mock.cart.EXPECT().GetList(cartParamMock).Return(cartResultMock, nil)
-				mock.product.EXPECT().GetListByID([]uint{1}).Return(productResultMock, nil)
+				mock.product.EXPECT().GetListByID(context.Background(), []uint{1}).Return(productResultMock, nil)
 				mock.transaction.EXPECT().Create(newTransactionMock).Return(transactionResultMock, nil)
 				mock.midtrans.EXPECT().Create(midtransCreateParamMock).Return(midtransResultMock, nil)
 				mock.cart.EXPECT().Update(selectParamCartMock, updateParamCartMock).Return(nil)
