@@ -27,7 +27,7 @@ func (r *rest) GetListProduct(ctx *gin.Context) {
 		return
 	}
 
-	products, err := r.uc.Product.GetList(productParam)
+	products, err := r.uc.Product.GetList(ctx.Request.Context(), productParam)
 	if err != nil {
 		r.httpRespError(ctx, http.StatusInternalServerError, err)
 		return
@@ -55,7 +55,7 @@ func (r *rest) GetProduct(ctx *gin.Context) {
 		return
 	}
 
-	product, err := r.uc.Product.Get(productParam)
+	product, err := r.uc.Product.Get(ctx.Request.Context(), productParam)
 	if err != nil {
 		r.httpRespError(ctx, http.StatusInternalServerError, err)
 		return

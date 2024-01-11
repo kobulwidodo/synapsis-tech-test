@@ -1,12 +1,13 @@
 package category
 
 import (
+	"context"
 	categoryDom "go-clean/src/business/domain/category"
 	"go-clean/src/business/entity"
 )
 
 type Interface interface {
-	GetList() ([]entity.Category, error)
+	GetList(ctx context.Context) ([]entity.Category, error)
 }
 
 type category struct {
@@ -21,8 +22,8 @@ func Init(cd categoryDom.Interface) Interface {
 	return c
 }
 
-func (c *category) GetList() ([]entity.Category, error) {
-	categories, err := c.category.GetList()
+func (c *category) GetList(ctx context.Context) ([]entity.Category, error) {
+	categories, err := c.category.GetList(ctx)
 	if err != nil {
 		return categories, err
 	}

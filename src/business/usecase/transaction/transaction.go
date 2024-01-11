@@ -68,7 +68,7 @@ func (t *transaction) Create(ctx context.Context, createParam entity.CreateTrans
 		productIDs = append(productIDs, c.ProductID)
 	}
 
-	products, err := t.product.GetListByID(productIDs)
+	products, err := t.product.GetListByID(ctx, productIDs)
 	if err != nil {
 		return entity.Transaction{}, err
 	}
